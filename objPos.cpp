@@ -1,5 +1,5 @@
 #include "objPos.h"
-
+#include <cstddef> 
 objPos::objPos()
 {
     pos = new Pos;
