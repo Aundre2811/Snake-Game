@@ -3,14 +3,15 @@
 #include "objPos.h"
 #include "GameMechs.h"
 #include "Player.h"
+#include "Food.h"
 
 using namespace std;
 
 #define DELAY_CONST 100000
 
 GameMechs* mainGameMechs;
-
 Player* player;
+Food* food;
 
 
 
@@ -53,8 +54,13 @@ void Initialize(void)
     MacUILib_clearScreen();
 
     mainGameMechs = new GameMechs(20, 10);
-
     player = new Player(mainGameMechs);
+    food = new Food();
+
+    objPos startPos;
+    player->getPlayerPos(startPos);
+
+    food->generateFood(startPos, mainGameMechs->getBoardSizeX(), mainGameMechs->getBoardSizeY());
 }
 
 void GetInput(void)
@@ -91,11 +97,19 @@ void RunLogic(void)
         mainGameMechs->setExitTrue();
     }
 
-    // Clear the stored input so we don't reuse the same key forever
-    mainGameMechs->clearInput();
+    if (c == 'F' || c == 'f')
+    {
+        objPos currentPlayerPos;
+        player->getPlayerPos(currentPlayerPos);
+        food->generateFood(currentPlayerPos, mainGameMechs->getBoardSizeX(), mainGameMechs->getBoardSizeY());
+    }
 
     player->updatePlayerDir();
     player->movePlayer();
+
+    // Clear the stored input so we don't reuse the same key forever
+    mainGameMechs->clearInput();
+
 }
 
 
@@ -104,20 +118,26 @@ void DrawScreen(void)
     MacUILib_clearScreen();
 
     objPos currentPos;
+    objPos currentFoodPos = food->getFoodPos();
     player->getPlayerPos(currentPos);
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < mainGameMechs->getBoardSizeY(); i++)
     {
-        for (int j = 0; j < 20; j++)
+        for (int j = 0; j < mainGameMechs->getBoardSizeX(); j++)
         {
-            if (j == 0 || j == 19 || i == 0 || i == 9)
+            if (j == 0 || j == mainGameMechs->getBoardSizeX() - 1 || i == 0 || i == mainGameMechs->getBoardSizeY() - 1)
             {
                 MacUILib_printf("%s", "#");
             }
 
-            else if (j == currentPos.x && i == currentPos.y)
+            else if (j == currentPos.getObjPos().pos->x && i == currentPos.getObjPos().pos->y)
             {
                 MacUILib_printf("%c", currentPos.symbol);
+            }
+
+            else if(j == currentFoodPos.getObjPos().pos->x && i == currentFoodPos.getObjPos().pos->y)
+            {
+                MacUILib_printf("%c", currentFoodPos.symbol);
             }
 
             else
@@ -157,5 +177,7 @@ void CleanUp(void)
     MacUILib_uninit();
 
     delete mainGameMechs;
+    delete player;
+    delete food;
 }
 
