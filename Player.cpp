@@ -34,35 +34,31 @@ void Player::updatePlayerDir()
         
         switch (mainGameMechsRef->getInput())
         {
-            case mainGameMechsRef->setExitTrue():
-                exitFlag;
-                break;
-
             case LEFT:
-                if (dir != RIGHT)
+                if (myDir != RIGHT)
                 {
-                    dir = LEFT;
+                    myDir = LEFT;
                 }
                 break;
 
             case RIGHT:
-                if (dir != LEFT)
+                if (myDir != LEFT)
                 {
-                    dir = RIGHT;
+                    myDir = RIGHT;
                 }  
                 break;
             
             case UP:
-                if (dir != DOWN)
+                if (myDir != DOWN)
                 {
-                    dir = UP;
+                    myDir = UP;
                 }
                 break;
 
             case DOWN:
-                if (dir != UP)
+                if (myDir != UP)
                 {
-                    dir = DOWN;
+                    myDir = DOWN;
                 }
                 break;
         }
@@ -71,6 +67,52 @@ void Player::updatePlayerDir()
 void Player::movePlayer()
 {
     // PPA3 Finite State Machine logic
-}
 
-// More methods to be added
+    int currentX = playerPos.getObjPos().pos->x;
+    int currentY = playerPos.getObjPos().pos->y;
+
+    switch(myDir)
+    {
+        case LEFT:
+            currentX--;  
+
+            if(currentX == 0)
+                {
+                    currentX = mainGameMechsRef->getBoardSizeX() - 2;
+                }
+
+            break;
+        
+        case RIGHT:
+            currentX++;
+
+            if (currentX == mainGameMechsRef->getBoardSizeX() - 1)
+                {
+                    currentX = 1;
+                }
+
+            break;
+
+        case UP:
+            currentY--;
+
+            if(currentY == 0)
+            {
+                currentY = mainGameMechsRef->getBoardSizeY() - 2;
+            }
+
+            break;
+
+        case DOWN:
+            currentY++;
+
+            if(currentY == mainGameMechsRef->getBoardSizeY() - 1)
+            {
+                currentY = 1;
+            }
+
+            break;
+
+    }
+    playerPos.setObjPos(currentX, currentY, playerPos.getSymbol());
+}
