@@ -3,21 +3,24 @@
 
 #include "objPos.h"
 #include "GameMechs.h"
+#include "objPosArrayList.h"
 
 #include <cstdlib>
 #include <time.h>
 
 class Food
 {
-    private:
-        objPos foodPos;
+private:
+    objPos foodPos;
 
-    public:
-        Food();
-        ~Food();
+public:
+    Food();
+    ~Food();
 
-        void generateFood(objPos blockOff, int boardSizeX, int boardSizeY);
-        objPos getFoodPos() const;
+    // Now takes the whole snake body list so we can avoid all segments
+    void generateFood(objPosArrayList* blockOffList, int boardSizeX, int boardSizeY);
+
+    objPos getFoodPos() const;
 };
 
 #endif

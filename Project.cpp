@@ -54,14 +54,18 @@ void Initialize(void)
     MacUILib_clearScreen();
 
     mainGameMechs = new GameMechs(20, 10);
-    player = new Player(mainGameMechs);
+
+    // Food must exist before Player since Player stores a Food*
     food = new Food();
+    player = new Player(mainGameMechs, food);
 
-    objPos startPos;
-    player->getPlayerPos(startPos);
-
-    food->generateFood(startPos, mainGameMechs->getBoardSizeX(), mainGameMechs->getBoardSizeY());
+    // Generate the first food, blocking off the whole snake body
+    objPosArrayList* bodyList = player->getPlayerPos();
+    food->generateFood(bodyList,
+                       mainGameMechs->getBoardSizeX(),
+                       mainGameMechs->getBoardSizeY());
 }
+
 
 void GetInput(void)
 {
@@ -99,9 +103,11 @@ void RunLogic(void)
 
     if (c == 'F' || c == 'f')
     {
-        objPos currentPlayerPos;
-        player->getPlayerPos(currentPlayerPos);
-        food->generateFood(currentPlayerPos, mainGameMechs->getBoardSizeX(), mainGameMechs->getBoardSizeY());
+        // Regenerate food for debugging, avoiding the whole snake body
+        objPosArrayList* bodyList = player->getPlayerPos();
+        food->generateFood(bodyList,
+                       mainGameMechs->getBoardSizeX(),
+                       mainGameMechs->getBoardSizeY());
     }
 
     player->updatePlayerDir();
@@ -117,41 +123,57 @@ void DrawScreen(void)
 {
     MacUILib_clearScreen();
 
-    objPos currentPos;
     objPos currentFoodPos = food->getFoodPos();
-    player->getPlayerPos(currentPos);
+    objPosArrayList* bodyList = player->getPlayerPos();
 
     for (int i = 0; i < mainGameMechs->getBoardSizeY(); i++)
     {
         for (int j = 0; j < mainGameMechs->getBoardSizeX(); j++)
         {
-            if (j == 0 || j == mainGameMechs->getBoardSizeX() - 1 || i == 0 || i == mainGameMechs->getBoardSizeY() - 1)
-            {
-                MacUILib_printf("%s", "#");
-            }
+            bool printed = false;
 
-            else if (j == currentPos.getObjPos().pos->x && i == currentPos.getObjPos().pos->y)
+            // 1) Borders
+            if (j == 0 || j == mainGameMechs->getBoardSizeX() - 1 ||
+                i == 0 || i == mainGameMechs->getBoardSizeY() - 1)
             {
-                MacUILib_printf("%c", currentPos.symbol);
+                MacUILib_printf("#");
+                printed = true;
             }
-
-            else if(j == currentFoodPos.getObjPos().pos->x && i == currentFoodPos.getObjPos().pos->y)
-            {
-                MacUILib_printf("%c", currentFoodPos.symbol);
-            }
-
             else
             {
-                MacUILib_printf("%s", " ");
+                // 2) Snake body – check every segment
+                for (int k = 0; k < bodyList->getSize(); k++)
+                {
+                    objPos segment = bodyList->getElement(k);
+
+                    if (j == segment.getObjPos().pos->x &&
+                        i == segment.getObjPos().pos->y)
+                    {
+                        MacUILib_printf("%c", segment.symbol);
+                        printed = true;
+                        break;
+                    }
+                }
+
+                // 3) Food (if no snake printed here)
+                if (!printed &&
+                    j == currentFoodPos.getObjPos().pos->x &&
+                    i == currentFoodPos.getObjPos().pos->y)
+                {
+                    MacUILib_printf("%c", currentFoodPos.symbol);
+                    printed = true;
+                }
             }
 
-        
-
+            // 4) Empty space
+            if (!printed)
+            {
+                MacUILib_printf(" ");
+            }
         }
+
         MacUILib_printf("\n");
     }
-
-    
 }
 
 void LoopDelay(void)

@@ -4,43 +4,36 @@
 #include "GameMechs.h"
 #include "objPos.h"
 #include "objPosArrayList.h"
+#include "Food.h"          // so Player can talk to Food
 
 class Player
 {
-    // Construct the remaining declaration from the project manual.
+public:
+    enum Dir 
+    {
+        UP = 'w', 
+        DOWN = 's', 
+        LEFT = 'a', 
+        RIGHT = 'd', 
+        STOP
+    };
 
-    // Only some sample members are included here
+    // NOTE: now also gets a Food pointer
+    Player(GameMechs* thisGMRef, Food* thisFoodRef);
+    ~Player();
 
-    // You will include more data members and member functions to complete your design.
+    // Iteration 3: now returns the WHOLE list
+    objPosArrayList* getPlayerPos() const;
 
-    
-    public:
-        enum Dir 
-        {
-            UP = 'w', 
-            DOWN = 's', 
-            LEFT = 'a', 
-            RIGHT = 'd', 
-            STOP
-        };  // This is the direction state
+    void updatePlayerDir();
+    void movePlayer();
 
-        Player(GameMechs* thisGMRef);
-        ~Player();
+private:
+    objPosArrayList* playerPosList;   // snake body list
+    Dir myDir;
 
-        void getPlayerPos(objPos &returnPos) const; // Upgrade this in iteration 3.       
-        void updatePlayerDir();
-        void movePlayer();
-
-        // More methods to be added here
-
-    private:
-        objPos playerPos; // Upgrade this in iteration 3. //Holds player position and ASCII symbol
-        enum Dir myDir; // myDir declared as variable of type enum Dir (up, down, left, right, stop)
-
-        // Need a reference to the Main Game Mechanisms
-        GameMechs* mainGameMechsRef; //Creates pointer (reference) to GameMechs class to utilize it
-
-        // Pass any new classes references into Player object (same thing as with GameMechs)
+    GameMechs* mainGameMechsRef;      // game settings, score, etc.
+    Food* foodRef;                    // to check / regenerate food
 };
 
 #endif
