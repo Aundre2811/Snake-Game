@@ -88,19 +88,6 @@ void RunLogic(void)
         mainGameMechs->setExitTrue();
     }
 
-    // If the user presses 'p' or 'P', increase the score (for testing)
-    if (c == 'p' || c == 'P')
-    {
-        mainGameMechs->incrementScore();
-    }
-
-    // If the user presses 'l' or 'L', mark as lost and exit (for testing)
-    if (c == 'l' || c == 'L')
-    {
-        mainGameMechs->setLoseFlag();
-        mainGameMechs->setExitTrue();
-    }
-
     if (c == 'F' || c == 'f')
     {
         // Regenerate food for debugging, avoiding the whole snake body

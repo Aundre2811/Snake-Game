@@ -19,7 +19,7 @@ Player::Player(GameMechs* thisGMRef, Food* thisFoodRef)
 
 Player::~Player()
 {
-    // clean up heap memory
+    // Clean up heap memory
     delete playerPosList;
     playerPosList = NULL;
 }
@@ -120,12 +120,18 @@ void Player::movePlayer()
     // ----- 5. Insert new head -----
     playerPosList->insertHead(newHead);
 
-    if (!ateFood)
+
+    for (int i = 1; i < playerPosList->getSize(); i++)
     {
-        // Normal movement: remove tail (length stays same)
-        playerPosList->removeTail();
+        objPos elementCheck = playerPosList->getElement(i);
+        if (newHead.isPosEqual(&elementCheck))
+        {
+            mainGameMechsRef->setLoseFlag();
+            mainGameMechsRef->setExitTrue();
+        }
     }
-    else
+
+    if(ateFood)
     {
         // Ate food:
         //  - DO NOT remove tail  -> snake grows by 1
@@ -140,5 +146,12 @@ void Player::movePlayer()
         );
     }
 
-    // (We will add “self-collision” here later for Feature 3.)
+
+    else
+    {
+        // Normal movement: remove tail (length stays same)
+        playerPosList->removeTail();   
+    }
+
+    
 }

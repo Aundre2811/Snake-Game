@@ -21,7 +21,7 @@ objPos::objPos(int xPos, int yPos, char sym)
 
 objPos::~objPos() //Destructor
 {
-    delete pos; //Do I need delete[] pos instead??????????
+    delete pos; 
     pos = NULL;
 }
 
@@ -50,10 +50,6 @@ objPos& objPos::operator= (const objPos& o) //Copy Assignment Operator
     return *this; //Dereferenced pointer to return actual object
 
 }
-
-/* CHECK FOR HANDLING CASE WHERE OBJECT ALREADY HAS ALLOCATED MEMORY FOR POS*/
-
-
 
 
 void objPos::setObjPos(objPos o)
