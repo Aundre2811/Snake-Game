@@ -88,15 +88,6 @@ void RunLogic(void)
         mainGameMechs->setExitTrue();
     }
 
-    if (c == 'F' || c == 'f')
-    {
-        // Regenerate food for debugging, avoiding the whole snake body
-        objPosArrayList* bodyList = player->getPlayerPos();
-        food->generateFood(bodyList,
-                       mainGameMechs->getBoardSizeX(),
-                       mainGameMechs->getBoardSizeY());
-    }
-
     player->updatePlayerDir();
     player->movePlayer();
 
