@@ -9,15 +9,10 @@ using namespace std;
 
 #define DELAY_CONST 100000
 
+// Pointers to allocated classes
 GameMechs* mainGameMechs;
 Player* player;
 Food* food;
-
-
-
-
-
-
 
 
 
@@ -35,6 +30,7 @@ int main(void)
 
     Initialize();
 
+    // Game runs while not exiting
     while(mainGameMechs->getExitFlagStatus() == false) 
     {
         GetInput();
@@ -53,17 +49,14 @@ void Initialize(void)
     MacUILib_init();
     MacUILib_clearScreen();
 
-    mainGameMechs = new GameMechs(20, 10);
+    mainGameMechs = new GameMechs(20, 10); // Using GameMechs default constructor to create 20 x 10 board
 
-    // Food must exist before Player since Player stores a Food*
-    food = new Food();
-    player = new Player(mainGameMechs, food);
+    food = new Food(); // Creates food object
+    player = new Player(mainGameMechs, food); // Creates player object
 
-    // Generate the first food, blocking off the whole snake body
+    // Generate food which does not touch snake body
     objPosArrayList* bodyList = player->getPlayerPos();
-    food->generateFood(bodyList,
-                       mainGameMechs->getBoardSizeX(),
-                       mainGameMechs->getBoardSizeY());
+    food->generateFood(bodyList, mainGameMechs->getBoardSizeX(), mainGameMechs->getBoardSizeY());
 }
 
 
@@ -72,15 +65,15 @@ void GetInput(void)
     // Check if a key was pressed
     if (MacUILib_hasChar())
     {
-        char c = MacUILib_getChar();   // read the key
-        mainGameMechs->setInput(c);    // store it inside GameMechs
+        char c = MacUILib_getChar(); // Read the key pressed
+        mainGameMechs->setInput(c); // Store key pressed inside GameMechs
     }
 }
 
 
 void RunLogic(void)
 {
-    char c = mainGameMechs->getInput();   // get the last key pressed
+    char c = mainGameMechs->getInput(); // Get the last key pressed
 
     // If the user presses 'x' or 'X', exit the game
     if (c == 'x' || c == 'X')
@@ -88,11 +81,11 @@ void RunLogic(void)
         mainGameMechs->setExitTrue();
     }
 
+    // Update player direction and move snake
     player->updatePlayerDir();
     player->movePlayer();
 
-    // Clear the stored input so we don't reuse the same key forever
-    mainGameMechs->clearInput();
+    mainGameMechs->clearInput(); // Clear the stored input so we don't reuse the same key forever
 
 }
 
@@ -101,31 +94,32 @@ void DrawScreen(void)
 {
     MacUILib_clearScreen();
 
-    objPos currentFoodPos = food->getFoodPos();
-    objPosArrayList* bodyList = player->getPlayerPos();
+    objPos currentFoodPos = food->getFoodPos(); // Checking current food position
+    objPosArrayList* bodyList = player->getPlayerPos(); // Checking position of player
 
+    // Nested loop which goes through every section of board dimensions
     for (int i = 0; i < mainGameMechs->getBoardSizeY(); i++)
     {
         for (int j = 0; j < mainGameMechs->getBoardSizeX(); j++)
         {
-            bool printed = false;
+            bool printed = false; // Nothing printed
 
-            // 1) Borders
-            if (j == 0 || j == mainGameMechs->getBoardSizeX() - 1 ||
-                i == 0 || i == mainGameMechs->getBoardSizeY() - 1)
+            // Board borders
+            if (j == 0 || j == mainGameMechs->getBoardSizeX() - 1 || i == 0 || i == mainGameMechs->getBoardSizeY() - 1)
             {
                 MacUILib_printf("#");
                 printed = true;
             }
+
             else
             {
-                // 2) Snake body – check every segment
+                // Checks every segment of snake body
                 for (int k = 0; k < bodyList->getSize(); k++)
                 {
                     objPos segment = bodyList->getElement(k);
 
-                    if (j == segment.getObjPos().pos->x &&
-                        i == segment.getObjPos().pos->y)
+                    // Printing body of snake at position it's located
+                    if (j == segment.getObjPos().pos->x && i == segment.getObjPos().pos->y)
                     {
                         MacUILib_printf("%c", segment.symbol);
                         printed = true;
@@ -133,17 +127,15 @@ void DrawScreen(void)
                     }
                 }
 
-                // 3) Food (if no snake printed here)
-                if (!printed &&
-                    j == currentFoodPos.getObjPos().pos->x &&
-                    i == currentFoodPos.getObjPos().pos->y)
+                // Food printed (if no snake printed here)
+                if (!printed && j == currentFoodPos.getObjPos().pos->x && i == currentFoodPos.getObjPos().pos->y)
                 {
                     MacUILib_printf("%c", currentFoodPos.symbol);
                     printed = true;
                 }
             }
 
-            // 4) Empty space
+            // Empty space
             if (!printed)
             {
                 MacUILib_printf(" ");
@@ -164,18 +156,20 @@ void CleanUp(void)
 {
     MacUILib_clearScreen();
 
-    // Print a simple message depending on loseFlag
-    if (mainGameMechs->getLoseFlagStatus())
+    // Message printed depending on loseFlag
+
+    if (mainGameMechs->getLoseFlagStatus()) // If player lost
     {
         std::cout << "You lost! Final score: " << mainGameMechs->getScore() << std::endl;
     }
-    else
+    else // If player manually exited game
     {
         std::cout << "Game exited. Final score: " << mainGameMechs->getScore() << std::endl;
     }
 
     MacUILib_uninit();
 
+    // Deallocate heap members
     delete mainGameMechs;
     delete player;
     delete food;

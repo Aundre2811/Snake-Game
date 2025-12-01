@@ -4,36 +4,35 @@
 #include "GameMechs.h"
 #include "objPos.h"
 #include "objPosArrayList.h"
-#include "Food.h"          // so Player can talk to Food
+#include "Food.h"
 
 class Player
 {
-public:
-    enum Dir 
-    {
-        UP = 'w', 
-        DOWN = 's', 
-        LEFT = 'a', 
-        RIGHT = 'd', 
-        STOP
-    };
+    public:
+        // Enumeration with directions snake can move with corresponding key presses
+        enum Dir 
+        {
+            UP = 'w', 
+            DOWN = 's', 
+            LEFT = 'a', 
+            RIGHT = 'd', 
+            STOP
+        };
 
-    // NOTE: now also gets a Food pointer
-    Player(GameMechs* thisGMRef, Food* thisFoodRef);
-    ~Player();
+        Player(GameMechs* thisGMRef, Food* thisFoodRef); // Constructor - Initializes player with GameMechs and Food references
+        ~Player(); // Deallocates heap memory
 
-    // Iteration 3: now returns the WHOLE list
-    objPosArrayList* getPlayerPos() const;
+        objPosArrayList* getPlayerPos() const; // Returns pointer to player position list
 
-    void updatePlayerDir();
-    void movePlayer();
+        void updatePlayerDir(); // Updates player movement direction
+        void movePlayer(); // Player position update algorithm
 
-private:
-    objPosArrayList* playerPosList;   // snake body list
-    Dir myDir;
+    private:
+        objPosArrayList* playerPosList; // Snake body list
+        Dir myDir; // Direction of player created from Dir enum
 
-    GameMechs* mainGameMechsRef;      // game settings, score, etc.
-    Food* foodRef;                    // to check / regenerate food
+        GameMechs* mainGameMechsRef; // Pointer to GameMechs class
+        Food* foodRef; // Pointer to Food class
 };
 
 #endif

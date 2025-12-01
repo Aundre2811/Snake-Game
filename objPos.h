@@ -1,7 +1,7 @@
 #ifndef OBJPOS_H
 #define OBJPOS_H
 
-// Not really a C++ thing
+// Struct for x and y position coordinates
 typedef struct 
 {
     int x;
@@ -11,28 +11,23 @@ typedef struct
 class objPos
 {
     public:
-        Pos* pos;        
-        char symbol;
+        Pos* pos; // Pointer to Pos struct 
+        char symbol; 
 
-        objPos();
-        objPos(int xPos, int yPos, char sym);
+        objPos(); // Default Constructor
+        objPos(int xPos, int yPos, char sym); // Constructor with allocated coordinates and symbol
+
+        ~objPos(); // Destructor
+        objPos(const objPos& o); // Copy Constructor (Deep Copy)
+        objPos& operator= (const objPos& o); // Copy Assignment Operator (Deep Copy)
         
-        // Respect the rule of six / minimum four
-        // [TODO] Implement the missing special member functions to meet the minimum four rule
+        void setObjPos(objPos o); // Set position of this pos as o struct object      
+        void setObjPos(int xPos, int yPos, char sym); // Set this pos to allocated coordinates and symbol
 
-        ~objPos();
-        objPos(const objPos& o);
-        objPos& operator= (const objPos& o);
-
-        
-        void setObjPos(objPos o);        
-        void setObjPos(int xPos, int yPos, char sym);  
-
-        objPos getObjPos() const;
-        char getSymbol() const;
-        char getSymbolIfPosEqual(const objPos* refPos) const;
-        
-        bool isPosEqual(const objPos* refPos) const;
+        objPos getObjPos() const; // Returns copy of current pos struct object (read-only)
+        char getSymbol() const; // Returns symbol of this pos (read-only)
+        bool isPosEqual(const objPos* refPos) const; // Checks if this pos is equal to referenced pos (read-only)
+        char getSymbolIfPosEqual(const objPos* refPos) const; // Receives symbol if this pos is equal to referenced pos (read-only)
 };
 
 #endif

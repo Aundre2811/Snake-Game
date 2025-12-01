@@ -12,35 +12,34 @@ using namespace std;
 class GameMechs
 {
     private:
-        char input;
-        bool exitFlag;
-        bool loseFlag;
-        int score;
+        char input; // Input from user
+        bool exitFlag; // Exiting game or not
+        bool loseFlag; // Loss or no loss
+        int score; // Game score
 
-        int boardSizeX;
-        int boardSizeY;
+        int boardSizeX; // Length of board size in x direction
+        int boardSizeY; // Length of board size in y direction
 
     public:
-        GameMechs();
-        GameMechs(int boardX, int boardY);
-        ~GameMechs();
+        GameMechs(); // Default constructor of game
+        GameMechs(int boardX, int boardY); // Constructor with custom board size
+        ~GameMechs(); // Deallocates memory on heap
         
-        bool getExitFlagStatus() const; 
-        void setExitTrue();
-        bool getLoseFlagStatus() const;
-        void setLoseFlag();
+        bool getExitFlagStatus() const; // Check whether game exit or not (read-only)
+        void setExitTrue(); // Set as game exits 
+        bool getLoseFlagStatus() const; // Check whether player lost or not (read-only)
+        void setLoseFlag(); // Sets as player lost
 
-        char getInput() const;
-        void setInput(char this_input);
-        void clearInput();
+        char getInput() const; // Receive ASCII input from user (read-only)
+        void setInput(char this_input); // Sets input character
+        void clearInput(); // Clears input
 
-        int getBoardSizeX() const;
-        int getBoardSizeY() const;
+        int getBoardSizeX() const; // Check board length in x direction (read-only)
+        int getBoardSizeY() const; // Check board length in y direction (read-only)
         
-        int getScore() const;
-        void incrementScore();
+        int getScore() const; // Return score of player (read-only)
+        void incrementScore(); // Add to player score
         
-        // More methods should be added here
 };
 
 #endif

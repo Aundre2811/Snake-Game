@@ -1,11 +1,13 @@
 #include "Player.h"
 
+// Constructor which initializes player at center of board
 Player::Player(GameMechs* thisGMRef, Food* thisFoodRef)
 {
-    mainGameMechsRef = thisGMRef;
-    foodRef = thisFoodRef;
-    myDir = STOP;
+    mainGameMechsRef = thisGMRef; // Pointer to GameMechs Class
+    foodRef = thisFoodRef; // Pointer to Food Class
+    myDir = STOP; // Player starts with no movement
 
+    // Player positioned at centre of board
     int startPosX = mainGameMechsRef->getBoardSizeX() / 2;
     int startPosY = mainGameMechsRef->getBoardSizeY() / 2;
 
@@ -17,6 +19,7 @@ Player::Player(GameMechs* thisGMRef, Food* thisFoodRef)
     playerPosList->insertHead(head);
 }
 
+// Destructor
 Player::~Player()
 {
     // Clean up heap memory
@@ -24,38 +27,46 @@ Player::~Player()
     playerPosList = NULL;
 }
 
+// Return pointer to player position list
 objPosArrayList* Player::getPlayerPos() const
 {
     // return the list so other code (draw, food) can see all segments
     return playerPosList;
 }
 
+// Update the direction the player is moving in
 void Player::updatePlayerDir()
 {
-    // Same FSM you already had :contentReference[oaicite:2]{index=2}
+    // Receives input from player and checks corresponding direction
     switch (mainGameMechsRef->getInput())
     {
+        // Move left if character is not initially moving to the right
         case LEFT:
             if (myDir != RIGHT)  myDir = LEFT;
             break;
 
+        // // Move right if character is not initially moving to the left
         case RIGHT:
             if (myDir != LEFT)   myDir = RIGHT;
             break;
 
+        // Move up if character is not initially moving down
         case UP:
             if (myDir != DOWN)   myDir = UP;
             break;
 
+        // Move down if character is not initially moving up
         case DOWN:
             if (myDir != UP)     myDir = DOWN;
             break;
 
+        // Break if none of above conditions met
         default:
             break;
     }
 }
 
+// Player position update algorithm
 void Player::movePlayer()
 {
     // If we haven't started moving, do nothing
@@ -64,22 +75,24 @@ void Player::movePlayer()
         return;
     }
 
-    // ----- 1. Get current head position -----
+    // Get current head position
     objPos head = playerPosList->getHeadElement();
     int newX = head.getObjPos().pos->x;
     int newY = head.getObjPos().pos->y;
 
-    // ----- 2. Compute new position with wraparound (same logic as before) -----
+    // Compute new position with use of wraparound logic
     switch (myDir)
     {
+        // Moves to the left, updating player position
         case LEFT:
             newX--;
-            if (newX == 0)
+            if (newX == 0) // If player hits border
             {
-                newX = mainGameMechsRef->getBoardSizeX() - 2;
+                newX = mainGameMechsRef->getBoardSizeX() - 2; // Relocate player to other side of board
             }
             break;
 
+        // Moves to the right
         case RIGHT:
             newX++;
             if (newX == mainGameMechsRef->getBoardSizeX() - 1)
@@ -88,6 +101,7 @@ void Player::movePlayer()
             }
             break;
 
+        // Moves up
         case UP:
             newY--;
             if (newY == 0)
@@ -96,6 +110,7 @@ void Player::movePlayer()
             }
             break;
 
+        // Moves down
         case DOWN:
             newY++;
             if (newY == mainGameMechsRef->getBoardSizeY() - 1)
@@ -108,37 +123,38 @@ void Player::movePlayer()
             break;
     }
 
-    // ----- 3. Create the new head segment -----
+    // Create the new head of snake
     objPos newHead(newX, newY, head.getSymbol());
 
-    // ----- 4. Check if this new position hits the food -----
+    // Checks if this new head position collides with the food
     objPos currentFoodPos = foodRef->getFoodPos();
     bool ateFood =
         (newX == currentFoodPos.getObjPos().pos->x) &&
         (newY == currentFoodPos.getObjPos().pos->y);
 
-    // ----- 5. Insert new head -----
+    // Insert new head
     playerPosList->insertHead(newHead);
 
 
+    // Loops through each element of snake to check if head hits any part of its body
     for (int i = 1; i < playerPosList->getSize(); i++)
     {
-        objPos elementCheck = playerPosList->getElement(i);
-        if (newHead.isPosEqual(&elementCheck))
+        objPos elementCheck = playerPosList->getElement(i); // Variable of objPos class created to hold element being checked
+        if (newHead.isPosEqual(&elementCheck)) // Checks if head is equal to position of element on snake body being checked (if head hits body)
         {
+            // Player loses and exits game
             mainGameMechsRef->setLoseFlag();
             mainGameMechsRef->setExitTrue();
         }
     }
 
+    // Checks if character ate food
     if(ateFood)
     {
-        // Ate food:
-        //  - DO NOT remove tail  -> snake grows by 1
-        //  - Increase score
-        //  - Generate new food that avoids the snake body
+        // Increase score by 1
         mainGameMechsRef->incrementScore();
 
+        // Generate new food that avoids the snake body
         foodRef->generateFood(
             playerPosList,
             mainGameMechsRef->getBoardSizeX(),
@@ -149,7 +165,7 @@ void Player::movePlayer()
 
     else
     {
-        // Normal movement: remove tail (length stays same)
+        // Remove tail from snake
         playerPosList->removeTail();   
     }
 

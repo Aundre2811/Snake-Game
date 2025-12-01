@@ -1,6 +1,6 @@
 #include "GameMechs.h"
 
-// Default constructor (board 30x15)
+// Default constructor (board 20x10)
 GameMechs::GameMechs()
 {
     boardSizeX = 20;   
@@ -24,70 +24,73 @@ GameMechs::GameMechs(int boardX, int boardY)
     score = 0;
 }
 
-// Destructor (not needed to delete anything yet)
+// Destructor (No dynamic memory to delete)
 GameMechs::~GameMechs()
 {
-    // No dynamic memory allocated, nothing to delete
+
 }
 
-// ---------------------- FLAG GETTERS/SETTERS ----------------------
-
+// Checks exit flag status (whether exiting game or not)
 bool GameMechs::getExitFlagStatus() const
 {
     return exitFlag;
 }
 
+// Exit game (set exit flag to true)
 void GameMechs::setExitTrue()
 {
     exitFlag = true;
 }
 
+// Checks lose flag status (whether player lost or not)
 bool GameMechs::getLoseFlagStatus() const
 {
     return loseFlag;
 }
 
+// Player loses (Set lose flag as true)
 void GameMechs::setLoseFlag()
 {
     loseFlag = true;
 }
 
-// ---------------------- INPUT GET/SET ----------------------
-
+// Receives input of ASCII input character from user
 char GameMechs::getInput() const
 {
     return input;
 }
 
+// Sets input
 void GameMechs::setInput(char this_input)
 {
     input = this_input;
 }
 
+// Clears input to ensure no double input processed
 void GameMechs::clearInput()
 {
     input = 0;
 }
 
-// ---------------------- BOARD SIZE ----------------------
-
+// Receives length of board x direction
 int GameMechs::getBoardSizeX() const
 {
     return boardSizeX;
 }
 
+// Receives length of board in y direction
 int GameMechs::getBoardSizeY() const
 {
     return boardSizeY;
 }
 
-// ---------------------- SCORE ----------------------
-
+// Checks user score
 int GameMechs::getScore() const
 {
     return score;
 }
 
+// Adds to user score
 void GameMechs::incrementScore()
 {
     score++;

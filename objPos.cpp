@@ -1,13 +1,16 @@
 #include "objPos.h"
 #include <cstddef> 
+
+// Default Constructor for object position and symbol set at 0
 objPos::objPos()
 {
-    pos = new Pos;
-    pos->x = 0;
-    pos->y = 0;
-    symbol = 0; //NULL
+    pos = new Pos; // Creating Pos struct object on heap
+    pos->x = 0; // Set x coordinate as 0 (Accessed through pointer from Pos struct)
+    pos->y = 0; // Set y coordinate as 0 (Accessed through pointer from Pos struct)
+    symbol = 0; // Symbol defined as NULL
 }
 
+// Constructor with allocated position and symbol
 objPos::objPos(int xPos, int yPos, char sym)
 {
     pos = new Pos;
@@ -16,16 +19,15 @@ objPos::objPos(int xPos, int yPos, char sym)
     symbol = sym;
 }
 
-// Respect the rule of six / minimum four
-// [TODO] Implement the missing special member functions to meet the minimum four rule
-
-objPos::~objPos() //Destructor
+//Destructor deleting Pos struct allocated on heap
+objPos::~objPos()
 {
-    delete pos; 
-    pos = NULL;
+    delete pos; // Free heap memory
+    pos = NULL; // Prevent pointer left behind
 }
 
-objPos::objPos(const objPos& o) //Copy Constructor
+//Copy Constructor
+objPos::objPos(const objPos& o)
 {
     pos = new Pos;
 
@@ -34,24 +36,27 @@ objPos::objPos(const objPos& o) //Copy Constructor
     symbol = o.symbol;
 }
 
-objPos& objPos::operator= (const objPos& o) //Copy Assignment Operator
+//Copy Assignment Operator
+objPos& objPos::operator= (const objPos& o)
 {
     if (this != &o) // Check for self assignment
     {
+        // Checks if this pos isn't a struct object
+        if(this->pos == NULL)
+        {
+            this->pos = new Pos; // Defines this pos as a struct object
+        }
+
+        // Copies from o Pos struct object to this Pos struct objects
         pos->x = o.pos->x;
         pos->y = o.pos->y;
         symbol = o.symbol;
-
-        if(this->pos == NULL)
-        {
-            this->pos = new Pos;
-        }
     }
-    return *this; //Dereferenced pointer to return actual object
+    return *this; //Dereferenced pointer to return this object
 
 }
 
-
+// Setting this pos as o struct object
 void objPos::setObjPos(objPos o)
 {
     pos->x = o.pos->x;
@@ -59,6 +64,7 @@ void objPos::setObjPos(objPos o)
     symbol = o.symbol;
 }
 
+// Setting this pos with allocated symbol and x,y, coordinates
 void objPos::setObjPos(int xPos, int yPos, char sym)
 {
     pos->x = xPos;
@@ -66,6 +72,7 @@ void objPos::setObjPos(int xPos, int yPos, char sym)
     symbol = sym;
 }
 
+// Returns copy of current pos struct object
 objPos objPos::getObjPos() const
 {
     objPos returnPos;
@@ -76,20 +83,23 @@ objPos objPos::getObjPos() const
     return returnPos;
 }
 
+// Returns symbol
 char objPos::getSymbol() const
 {
     return symbol;
 }
 
+// Checks if this pos position is equal to refPos position
 bool objPos::isPosEqual(const objPos* refPos) const
 {
     return (refPos->pos->x == pos->x && refPos->pos->y == pos->y);
 }
 
+// Return symbol of this pos if pos position is equal to refPos position
 char objPos::getSymbolIfPosEqual(const objPos* refPos) const
 {
     if(isPosEqual(refPos))
         return symbol;
     else
-        return 0;
+        return 0; // Returns 0 if they're not equal
 }

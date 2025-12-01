@@ -11,16 +11,16 @@
 class Food
 {
 private:
-    objPos foodPos;
+    objPos foodPos; // Defining position of food through objPos class
 
 public:
-    Food();
-    ~Food();
+    Food(); // Constructor
+    ~Food(); // Destructor
 
     // Now takes the whole snake body list so we can avoid all segments
     void generateFood(objPosArrayList* blockOffList, int boardSizeX, int boardSizeY);
 
-    objPos getFoodPos() const;
+    objPos getFoodPos() const; // Checks position of food
 };
 
 #endif
