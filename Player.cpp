@@ -42,22 +42,34 @@ void Player::updatePlayerDir()
     {
         // Move left if character is not initially moving to the right
         case LEFT:
-            if (myDir != RIGHT)  myDir = LEFT;
+            if (myDir != RIGHT)  
+            {
+                myDir = LEFT;
+            }
             break;
 
-        // // Move right if character is not initially moving to the left
+        // Move right if character is not initially moving to the left
         case RIGHT:
-            if (myDir != LEFT)   myDir = RIGHT;
+            if (myDir != LEFT) 
+            {  
+                myDir = RIGHT;
+            }
             break;
 
         // Move up if character is not initially moving down
         case UP:
-            if (myDir != DOWN)   myDir = UP;
+            if (myDir != DOWN)   
+            {
+                myDir = UP;
+            }
             break;
 
         // Move down if character is not initially moving up
         case DOWN:
-            if (myDir != UP)     myDir = DOWN;
+            if (myDir != UP)     
+            {
+                myDir = DOWN;
+            }
             break;
 
         // Break if none of above conditions met
@@ -128,9 +140,7 @@ void Player::movePlayer()
 
     // Checks if this new head position collides with the food
     objPos currentFoodPos = foodRef->getFoodPos();
-    bool ateFood =
-        (newX == currentFoodPos.getObjPos().pos->x) &&
-        (newY == currentFoodPos.getObjPos().pos->y);
+    bool ateFood = (newX == currentFoodPos.getObjPos().pos->x) && (newY == currentFoodPos.getObjPos().pos->y);
 
     // Insert new head
     playerPosList->insertHead(newHead);
@@ -155,11 +165,7 @@ void Player::movePlayer()
         mainGameMechsRef->incrementScore();
 
         // Generate new food that avoids the snake body
-        foodRef->generateFood(
-            playerPosList,
-            mainGameMechsRef->getBoardSizeX(),
-            mainGameMechsRef->getBoardSizeY()
-        );
+        foodRef->generateFood(playerPosList, mainGameMechsRef->getBoardSizeX(), mainGameMechsRef->getBoardSizeY());
     }
 
 
