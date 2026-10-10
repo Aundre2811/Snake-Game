@@ -1,6 +1,8 @@
 #ifndef FOOD_H
 #define FOOD_H
 
+#define FOOD_MAX 5
+
 #include "objPos.h"
 #include "GameMechs.h"
 #include "objPosArrayList.h"
@@ -11,7 +13,7 @@
 class Food
 {
 private:
-    objPos foodPos; // Defining position of food through objPos class
+    objPosArrayList* foodBucket; // Defining position of food through objPos class
 
 public:
     Food(); // Constructor
@@ -20,7 +22,7 @@ public:
     // Now takes the whole snake body list so we can avoid all segments
     void generateFood(objPosArrayList* blockOffList, int boardSizeX, int boardSizeY);
 
-    objPos getFoodPos() const; // Checks position of food
+    objPosArrayList* getFoodPos() const; // Returns pointer to foodlist
 };
 
 #endif

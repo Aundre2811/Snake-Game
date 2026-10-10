@@ -75,7 +75,7 @@ void RunLogic(void)
 {
     char c = mainGameMechs->getInput(); // Get the last key pressed
 
-    // If the user presses 'x' or 'X', exit the game
+    // Exit when 'x' or 'X' pressed
     if (c == 'x' || c == 'X')
     {
         mainGameMechs->setExitTrue();
@@ -94,7 +94,7 @@ void DrawScreen(void)
 {
     MacUILib_clearScreen();
 
-    objPos currentFoodPos = food->getFoodPos(); // Checking current food position
+    objPosArrayList* foodList = food->getFoodPos(); // Checking current food position
     objPosArrayList* bodyList = player->getPlayerPos(); // Checking position of player
 
     // Nested loop which goes through every section of board dimensions
@@ -128,10 +128,20 @@ void DrawScreen(void)
                 }
 
                 // Food printed (if no snake printed here)
-                if (!printed && j == currentFoodPos.getObjPos().pos->x && i == currentFoodPos.getObjPos().pos->y)
+                if(!printed)
                 {
-                    MacUILib_printf("%c", currentFoodPos.symbol);
-                    printed = true;
+                    // Checking if food exists at current spot on board and drawing it
+                    for (int foodCheck = 0; foodCheck < foodList->getSize(); foodCheck++)
+                    {
+                        objPos currentFoodPos = foodList->getElement(foodCheck);
+
+                        if(i == currentFoodPos.getObjPos().pos->y && j == currentFoodPos.getObjPos().pos->x)
+                        {
+                            MacUILib_printf("%c", currentFoodPos.symbol);
+                            printed = true;
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -158,7 +168,7 @@ void CleanUp(void)
 
     // Message printed depending on loseFlag
 
-    if (mainGameMechs->getLoseFlagStatus()) // If player lost
+    if (mainGameMechs->getLoseFlagStatus())
     {
         std::cout << "You lost! Final score: " << mainGameMechs->getScore() << std::endl;
     }

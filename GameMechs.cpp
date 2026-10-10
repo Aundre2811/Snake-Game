@@ -90,8 +90,8 @@ int GameMechs::getScore() const
     return score;
 }
 
-// Adds to user score
-void GameMechs::incrementScore()
+// Adds to user score with customizable score
+void GameMechs::incrementScore(int scoreAdder)
 {
-    score++;
+    score += scoreAdder;
 }

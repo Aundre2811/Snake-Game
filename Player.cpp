@@ -138,13 +138,8 @@ void Player::movePlayer()
     // Create the new head of snake
     objPos newHead(newX, newY, head.getSymbol());
 
-    // Checks if this new head position collides with the food
-    objPos currentFoodPos = foodRef->getFoodPos();
-    bool ateFood = (newX == currentFoodPos.getObjPos().pos->x) && (newY == currentFoodPos.getObjPos().pos->y);
-
     // Insert new head
     playerPosList->insertHead(newHead);
-
 
     // Loops through each element of snake to check if head hits any part of its body
     for (int i = 1; i < playerPosList->getSize(); i++)
@@ -158,18 +153,41 @@ void Player::movePlayer()
         }
     }
 
-    // Checks if character ate food
-    if(ateFood)
-    {
-        // Increase score by 1
-        mainGameMechsRef->incrementScore();
+    // Checks if this new head position collides with the food
+    objPosArrayList* foodList = foodRef->getFoodPos();
 
-        // Generate new food that avoids the snake body
-        foodRef->generateFood(playerPosList, mainGameMechsRef->getBoardSizeX(), mainGameMechsRef->getBoardSizeY());
+    bool ateFood = false; // Food is not eaten
+
+    // Looping through all food that can possibly be eaten
+    for (int foodCheck = 0; foodCheck < foodList->getSize(); foodCheck++)
+    {
+        objPos currentFoodPos = foodList->getElement(foodCheck); // Gets food item from foodlist
+
+        // Checks if snake head collides with food
+        if (newHead.isPosEqual(&currentFoodPos))
+        {
+            ateFood = true;
+
+            if(currentFoodPos.getSymbol() == 'F') // Checking if special food collided with
+            {
+                // Increase score by 10
+                mainGameMechsRef->incrementScore(10);
+            }
+
+            else 
+            {
+                // Increase score by 1
+                mainGameMechsRef->incrementScore(1);
+            }
+
+            // Generate new food that avoids the snake body
+            foodRef->generateFood(playerPosList, mainGameMechsRef->getBoardSizeX(), mainGameMechsRef->getBoardSizeY());
+            break;
+        }
     }
 
 
-    else
+    if (!ateFood)
     {
         // Remove tail from snake
         playerPosList->removeTail();   

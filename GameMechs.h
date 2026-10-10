@@ -38,7 +38,7 @@ class GameMechs
         int getBoardSizeY() const; // Check board length in y direction (read-only)
         
         int getScore() const; // Return score of player (read-only)
-        void incrementScore(); // Add to player score
+        void incrementScore(int scoreAdder); // Add to player score
         
 };
 
