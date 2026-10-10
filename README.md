@@ -1,18 +1,20 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/hPg6U8MY)
-# COE2SH4-PPA3Template
-Project
+# Snake Game
 
-You must watch the briefing video and read through the manual to engage in the development activities.
+C++ OOP-based game coded for COMPENG 2SH4 (Principles of Programming) course at McMaster
 
+---
 
-Section: L07
+To test the game, open the terminal and navigate to the project directory. Build the game using `make` and run the game by using `./project.exe`
+```
+make
+./project.exe
+```
 
-MacID: surena10
+---
 
-StudentID: 400559794
+To play the game, use the keys wasd to move the snake around, collecting food (`f` and `F`) to increase the snake length where f gives 1 point and F gives 10 points. The game ends when the snake's head hits its body or the 'x' key is pressed, generating a final score.
 
-Section: L07
+---
 
-MacID: saleem33
-
-StudentID: 400567909
+Please click the link to see the project manual/instructions:
+[Project Manual](https://github.com/Aundre2811/Snake-Game/blob/main/CE2SH4%20Project%20Manual%20vF2025.pdf)
